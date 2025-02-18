@@ -2,6 +2,8 @@ import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
 import { swaggerUI } from '@hono/swagger-ui'
 
+import { faker } from '@faker-js/faker';
+
 const app = new OpenAPIHono()
 
 app.doc('/openapi.json', {
@@ -14,6 +16,10 @@ app.doc('/openapi.json', {
     {
       name: 'random',
       description: 'Random generator'
+    },
+    {
+      name: 'account',
+      description: 'Account generator'
     }
   ],
 })
@@ -52,6 +58,41 @@ app.openapi(
     })
   }
 )
+
+app.openapi(
+  createRoute({
+    method: 'get',
+    path: '/random/user.json',
+    tags: ['account'],
+    responses: {
+      200: {
+        description: 'Respond a random user',
+        content: {
+          'application/json': {
+            schema: z.object({
+              user: z.object({
+                name: z.string(),
+                email: z.string(),
+                password: z.string(),
+              }),
+            })
+          }
+        }
+      }
+    }
+  }),
+  (c) => {
+    return c.json({
+      user: {
+        name: faker.person.fullName({ sex: 'male' }),
+        email: faker.internet.email(),
+        password: faker.internet.password()
+      }
+    })
+  }
+)
+
+
 
 app.notFound((c) => {
   return c.text('', 404)
