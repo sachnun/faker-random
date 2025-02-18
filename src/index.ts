@@ -102,11 +102,14 @@ app.openapi(
         content: {
           'application/json': {
             schema: z.object({
-              user: z.object({
-                name: z.string(),
-                email: z.string(),
-                password: z.string(),
+              name: z.object({
+                first: z.string(),
+                last: z.string(),
+                fullname: z.string(),
               }),
+              email: z.string(),
+              password: z.string(),
+              organisation: z.string(),
             })
           }
         }
@@ -114,17 +117,21 @@ app.openapi(
     }
   }),
   (c) => {
+    const firstName = faker.person.firstName('male')
+    const lastName = faker.person.lastName('male')
     return c.json({
-      user: {
-        name: faker.person.fullName({ sex: 'male' }),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-      }
+      name: {
+        first: firstName,
+        last: lastName,
+        fullname: faker.person.fullName({ firstName, lastName })
+      },
+      email: faker.internet.email({ firstName, lastName, provider: 'gustr.com' }).toLowerCase(),
+      password: faker.internet.password({ memorable: true, length: 16 }),
+      organisation: faker.company.name()
     })
   }
 )
 
-// password only
 app.openapi(
   createRoute({
     method: 'get',
