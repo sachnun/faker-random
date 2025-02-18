@@ -56,10 +56,37 @@ app.openapi(
   (c) => {
     return c.json({
       version: {
-        major: Math.random(),
-        minor: Math.random(),
-        patch: Math.random(),
+        major: faker.number.int({ min: 0, max: 100 }),
+        minor: faker.number.int({ min: 0, max: 100 }),
+        patch: faker.number.float({ min: 1, max: 10 })
       }
+    })
+  }
+)
+
+app.openapi(
+  createRoute({
+    method: 'get',
+    path: '/random/ip.json',
+    tags: ['random'],
+    responses: {
+      200: {
+        description: 'Respond a random IP address',
+        content: {
+          'application/json': {
+            schema: z.object({
+              ipv4: z.string(),
+              ipv6: z.string(),
+            })
+          }
+        }
+      }
+    }
+  }),
+  (c) => {
+    return c.json({
+      ipv4: faker.internet.ipv4(),
+      ipv6: faker.internet.ipv6()
     })
   }
 )
