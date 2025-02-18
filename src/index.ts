@@ -125,7 +125,7 @@ app.openapi(
         fullname: faker.person.fullName({ firstName, lastName })
       },
       email: faker.internet.email({ firstName, lastName }).toLowerCase(),
-      password: faker.internet.password({ memorable: true, length: 16 })
+      password: faker.internet.password({ length: 16 })
     })
   }
 )
