@@ -103,6 +103,16 @@ app.openapi(
     method: 'get',
     path: '/random/password.txt',
     tags: ['account'],
+    parameters: [
+      {
+        name: 'n',
+        in: 'query',
+        schema: { type: 'number' },
+        example: 12,
+        description: 'Password length',
+        required: false
+      }
+    ],
     responses: {
       200: {
         description: 'Respond a random password',
@@ -115,7 +125,8 @@ app.openapi(
     }
   }),
   (c) => {
-    return c.text(faker.internet.password())
+    const length = Number(c.req.query('n')) || 12
+    return c.text(faker.internet.password({ length }))
   }
 )
 
