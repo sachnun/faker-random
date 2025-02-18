@@ -6,11 +6,16 @@ import { faker } from '@faker-js/faker';
 
 const app = new OpenAPIHono()
 
+const description = `
+This is a random data generator API. It uses the \`faker-js\` library to generate random data.
+`
+
 app.doc('/openapi.json', {
   openapi: '3.0.0',
   info: {
     version: '0.0.1',
     title: 'Faker Random',
+    description: description
   },
   tags: [
     {
