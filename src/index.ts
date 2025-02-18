@@ -1,8 +1,8 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
+import { OpenAPIHono } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
 import { swaggerUI } from '@hono/swagger-ui'
-
-import { faker } from '@faker-js/faker';
+import randomRoutes from './routes/random'
+import accountRoutes from './routes/account'
 
 const app = new OpenAPIHono()
 
@@ -31,136 +31,8 @@ app.doc('/openapi.json', {
 
 app.get('/', swaggerUI({ url: '/openapi.json' }))
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/random/version.json',
-    tags: ['random'],
-    responses: {
-      200: {
-        description: 'Respond a random number',
-        content: {
-          'application/json': {
-            schema: z.object({
-              version: z.object({
-                major: z.number(),
-                minor: z.number(),
-                patch: z.number(),
-              }),
-            })
-          }
-        }
-      }
-    }
-  }),
-  (c) => {
-    return c.json({
-      version: {
-        major: faker.number.int({ min: 0, max: 100 }),
-        minor: faker.number.int({ min: 0, max: 100 }),
-        patch: faker.number.float({ min: 1, max: 10 })
-      }
-    })
-  }
-)
-
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/random/ip.json',
-    tags: ['random'],
-    responses: {
-      200: {
-        description: 'Respond a random IP address',
-        content: {
-          'application/json': {
-            schema: z.object({
-              ipv4: z.string(),
-              ipv6: z.string(),
-            })
-          }
-        }
-      }
-    }
-  }),
-  (c) => {
-    return c.json({
-      ipv4: faker.internet.ipv4(),
-      ipv6: faker.internet.ipv6()
-    })
-  }
-)
-
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/random/user.json',
-    tags: ['account'],
-    responses: {
-      200: {
-        description: 'Respond a random user',
-        content: {
-          'application/json': {
-            schema: z.object({
-              name: z.object({
-                first: z.string(),
-                last: z.string(),
-                fullname: z.string(),
-              }),
-              email: z.string(),
-              password: z.string(),
-            })
-          }
-        }
-      }
-    }
-  }),
-  (c) => {
-    const firstName = faker.person.firstName('male')
-    const lastName = faker.person.lastName('male')
-    return c.json({
-      name: {
-        first: firstName,
-        last: lastName,
-        fullname: faker.person.fullName({ firstName, lastName })
-      },
-      email: faker.internet.email({ firstName, lastName }).toLowerCase(),
-      password: faker.internet.password({ length: 16 })
-    })
-  }
-)
-
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/random/password.txt',
-    tags: ['account'],
-    parameters: [
-      {
-        name: 'n',
-        in: 'query',
-        schema: { type: 'number' },
-        example: 12,
-        description: 'Password length',
-        required: false
-      }
-    ],
-    responses: {
-      200: {
-        description: 'Respond a random password',
-        content: {
-          'text/plain': {
-            schema: z.string()
-          }
-        }
-      }
-    }
-  }),
-  (c) => {
-    const length = Number(c.req.query('n')) || 12
-    return c.text(faker.internet.password({ length }))
-  }
-)
+app.route('/random', randomRoutes)
+app.route('/random/account', accountRoutes)
 
 app.notFound((c) => {
   return c.text('', 404)
