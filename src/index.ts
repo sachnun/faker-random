@@ -1,11 +1,18 @@
-import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
+import { swaggerUI } from '@hono/swagger-ui'
+import { OpenAPIHono } from '@hono/zod-openapi'
 
-const app = new Hono()
+const app = new OpenAPIHono()
 
-app.get('/', (c) => {
-  return c.text('Random Faker!')
+app.doc('/openapi.json', {
+  openapi: '3.0.0',
+  info: {
+    version: '0.0.1',
+    title: 'Faker Random',
+  },
 })
+
+app.get('/', swaggerUI({ url: '/openapi.json' }))
 
 // route /random
 app.get('/random', (c) => {
