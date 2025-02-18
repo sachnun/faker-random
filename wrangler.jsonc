@@ -2,10 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "random-faker",
   "main": "src/index.ts",
-  "compatibility_date": "2025-02-18"
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
+  "compatibility_date": "2025-02-18",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
