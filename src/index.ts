@@ -1,6 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
 import { swaggerUI } from '@hono/swagger-ui'
+
 import randomRoutes from './routes/random'
 import accountRoutes from './routes/account'
 
@@ -32,7 +33,7 @@ app.doc('/openapi.json', {
 app.get('/', swaggerUI({ url: '/openapi.json' }))
 
 app.route('/random', randomRoutes)
-app.route('/random/account', accountRoutes)
+app.route('/random', accountRoutes)
 
 app.notFound((c) => {
   return c.text('', 404)

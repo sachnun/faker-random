@@ -2,7 +2,7 @@ import { createRoute, z } from '@hono/zod-openapi'
 import { faker } from '@faker-js/faker'
 import { OpenAPIHono } from '@hono/zod-openapi'
 
-const router = new OpenAPIHono()
+const router = new OpenAPIHono().basePath('/account')
 
 router.openapi(
     createRoute({
