@@ -92,7 +92,27 @@ app.openapi(
   }
 )
 
-
+// password only
+app.openapi(
+  createRoute({
+    method: 'get',
+    path: '/random/password.txt',
+    tags: ['account'],
+    responses: {
+      200: {
+        description: 'Respond a random password',
+        content: {
+          'text/plain': {
+            schema: z.string()
+          }
+        }
+      }
+    }
+  }),
+  (c) => {
+    return c.text(faker.internet.password())
+  }
+)
 
 app.notFound((c) => {
   return c.text('', 404)
