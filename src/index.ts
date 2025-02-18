@@ -109,7 +109,6 @@ app.openapi(
               }),
               email: z.string(),
               password: z.string(),
-              organisation: z.string(),
             })
           }
         }
@@ -125,9 +124,8 @@ app.openapi(
         last: lastName,
         fullname: faker.person.fullName({ firstName, lastName })
       },
-      email: faker.internet.email({ firstName, lastName, provider: 'gustr.com' }).toLowerCase(),
-      password: faker.internet.password({ memorable: true, length: 16 }),
-      organisation: faker.company.name()
+      email: faker.internet.email({ firstName, lastName }).toLowerCase(),
+      password: faker.internet.password({ memorable: true, length: 16 })
     })
   }
 )
