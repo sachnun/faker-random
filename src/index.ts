@@ -14,7 +14,6 @@ app.doc('/openapi.json', {
 
 app.get('/', swaggerUI({ url: '/openapi.json' }))
 
-// route /random
 app.get('/random.json', (c) => {
   return c.json({ random: Math.random() })
 })
