@@ -44,6 +44,8 @@ app.doc('/openapi.json', {
 app.get(
   '/',
   apiReference({
+    pageTitle: 'Faker Random',
+    favicon: '/favicon.ico',
     spec: {
       url: '/openapi.json',
     },
