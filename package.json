@@ -1,8 +1,8 @@
 {
   "name": "random-faker",
   "scripts": {
-    "dev": "wrangler dev --ip 127.0.0.1",
-    "deploy": "wrangler deploy --minify"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
@@ -12,6 +12,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250109.0"
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "wrangler": "^3.109.2"
   }
 }
