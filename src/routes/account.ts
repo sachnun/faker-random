@@ -2,26 +2,27 @@ import { createRoute, z } from '@hono/zod-openapi'
 import { faker } from '@faker-js/faker'
 import { OpenAPIHono } from '@hono/zod-openapi'
 
-const router = new OpenAPIHono().basePath('/account')
+const router = new OpenAPIHono()
 
 router.openapi(
     createRoute({
         method: 'get',
         path: '/user.json',
-        tags: ['account'],
+        summary: 'Random user',
+        tags: ['Generate Account'],
         responses: {
             200: {
-                description: 'Respond a random user',
+                description: 'Success response',
                 content: {
                     'application/json': {
                         schema: z.object({
                             name: z.object({
-                                first: z.string(),
-                                last: z.string(),
-                                fullname: z.string(),
+                                first: z.string().openapi({ description: 'First name', example: 'John' }),
+                                last: z.string().openapi({ description: 'Last name', example: 'Doe' }),
+                                fullname: z.string().openapi({ description: 'Full name', example: 'John Doe' }),
                             }),
-                            email: z.string(),
-                            password: z.string(),
+                            email: z.string().openapi({ description: 'Email address', example: 'john.doe@example.com' }),
+                            password: z.string().openapi({ description: 'Password', example: 'qwerty1234' }),
                         })
                     }
                 }
@@ -47,12 +48,13 @@ router.openapi(
     createRoute({
         method: 'get',
         path: '/password.txt',
-        tags: ['account'],
+        summary: 'Random password',
+        tags: ['Generate Account'],
         parameters: [
             {
                 name: 'n',
                 in: 'query',
-                schema: { type: 'number' },
+                schema: { type: 'number', default: 12 },
                 example: 12,
                 description: 'Password length',
                 required: false
@@ -60,10 +62,13 @@ router.openapi(
         ],
         responses: {
             200: {
-                description: 'Respond a random password',
+                description: 'Success response',
                 content: {
                     'text/plain': {
-                        schema: z.string()
+                        schema: z.string().openapi({
+                            description: 'Password',
+                            example: 'a1b2c3d4e5f6'
+                        })
                     }
                 }
             }

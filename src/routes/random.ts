@@ -8,17 +8,27 @@ router.openapi(
     createRoute({
         method: 'get',
         path: '/version.json',
-        tags: ['random'],
+        summary: 'Random version',
+        tags: ['Generate Random'],
         responses: {
             200: {
-                description: 'Respond a random number',
+                description: 'Success response',
                 content: {
                     'application/json': {
                         schema: z.object({
                             version: z.object({
-                                major: z.number(),
-                                minor: z.number(),
-                                patch: z.number(),
+                                major: z.number().openapi({
+                                    description: 'Major version',
+                                    example: 30
+                                }),
+                                minor: z.number().openapi({
+                                    description: 'Minor version',
+                                    example: 21
+                                }),
+                                patch: z.number().openapi({
+                                    description: 'Patch version',
+                                    example: 3.34281234
+                                })
                             }),
                         })
                     }
@@ -41,15 +51,22 @@ router.openapi(
     createRoute({
         method: 'get',
         path: '/ip.json',
-        tags: ['random'],
+        summary: 'Random IP address',
+        tags: ['Generate Random'],
         responses: {
             200: {
-                description: 'Respond a random IP address',
+                description: 'Success response',
                 content: {
                     'application/json': {
                         schema: z.object({
-                            ipv4: z.string(),
-                            ipv6: z.string(),
+                            ipv4: z.string().openapi({
+                                description: 'IPv4 address',
+                                example: '192.168.1.1'
+                            }),
+                            ipv6: z.string().openapi({
+                                description: 'IPv6 address',
+                                example: '2001:0db8:85a3:0000:0000:8a2e:0370:7334'
+                            })
                         })
                     }
                 }

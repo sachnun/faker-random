@@ -1,8 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
-import { swaggerUI } from '@hono/swagger-ui'
-import { getConnInfo } from 'hono/cloudflare-workers'
-import postgres from "postgres";
+import { apiReference } from '@scalar/hono-api-reference'
 
 import randomRoutes from './routes/random'
 import accountRoutes from './routes/account'
@@ -14,47 +12,48 @@ const app = new OpenAPIHono<{
 }>()
 
 const description = `
-This is a random data generator API. It uses the \`faker-js\` library to generate random data.
+This is **api** service based on [Faker.js](https://fakerjs.dev/guide/) library.\n
+**100% free**, without any limits.
 `
 
-app.use('*', async (c, next) => {
-  const info = getConnInfo(c)
-  const sql = postgres(c.env.DATABASE_URL);
-
-  if (info.remote.address) {
-    c.executionCtx.waitUntil(
-      sql`INSERT INTO visitors (ip) VALUES (${info.remote.address})`
-        .then(() => {
-          console.log('inserted')
-        })
-    );
-  }
-  return next()
-})
+// app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
+//   type: 'http',
+//   scheme: 'bearer',
+// })
 
 app.doc('/openapi.json', {
-  openapi: '3.0.0',
+  openapi: '3.0.3',
   info: {
-    version: '0.0.1',
+    version: '0.0.2',
     title: 'Faker Random',
     description: description
   },
   tags: [
     {
-      name: 'random',
-      description: 'Random generator'
+      name: 'Generate Random',
+      description: 'make random data'
     },
     {
-      name: 'account',
-      description: 'Account generator'
+      name: 'Generate Account',
+      description: 'make random account'
     }
   ],
+  // security: [{ Bearer: [] }]
 })
 
-app.get('/', swaggerUI({ url: '/openapi.json' }))
+app.get(
+  '/',
+  apiReference({
+    spec: {
+      url: '/openapi.json',
+    },
+    hideDownloadButton: true,
+    hideClientButton: true,
+  }),
+)
 
 app.route('/random', randomRoutes)
-app.route('/random', accountRoutes)
+app.route('/random/account/', accountRoutes)
 
 app.notFound((c) => {
   return c.text('', 404)
