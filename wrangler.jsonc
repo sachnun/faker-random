@@ -6,9 +6,6 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "assets": {
-    "directory": "public"
-  },
   "minify": true,
   "dev": {
     "ip": "127.0.0.1"
