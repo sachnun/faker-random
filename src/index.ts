@@ -1,25 +1,19 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { HTTPException } from 'hono/http-exception'
 import { apiReference } from '@scalar/hono-api-reference'
+import { HTTPException } from 'hono/http-exception'
+import { cors } from 'hono/cors'
 
-import randomRoutes from './routes/random'
-import accountRoutes from './routes/account'
+import random from './routes/random'
+import account from './routes/account'
 
-const app = new OpenAPIHono<{
-  Bindings: {
-    DATABASE_URL: string
-  }
-}>()
+const app = new OpenAPIHono()
+
+app.use(cors())
 
 const description = `
 This is **api** service based on [Faker.js](https://fakerjs.dev/guide/) library.\n
 **100% free**, without any limits.
-`
-
-// app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
-//   type: 'http',
-//   scheme: 'bearer',
-// })
+`.trim()
 
 app.doc('/openapi.json', {
   openapi: '3.0.3',
@@ -38,14 +32,12 @@ app.doc('/openapi.json', {
       description: 'make random account'
     }
   ],
-  // security: [{ Bearer: [] }]
 })
 
 app.get(
   '/',
   apiReference({
     pageTitle: 'Faker Random',
-    favicon: '/favicon.ico',
     spec: {
       url: '/openapi.json',
     },
@@ -54,8 +46,8 @@ app.get(
   }),
 )
 
-app.route('/random', randomRoutes)
-app.route('/random/account/', accountRoutes)
+app.route('/random', random)
+app.route('/random/account', account)
 
 app.notFound((c) => {
   return c.text('', 404)
@@ -63,7 +55,7 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
-    return err.getResponse()
+    return c.text('', err.status)
   }
   return c.text('', 500)
 })
