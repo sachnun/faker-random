@@ -2,8 +2,8 @@
 	"name": "Bun & Wrangler",
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
-		"ghcr.io/prulloac/devcontainer-features/bun": {},
-		"ghcr.io/devcontainers-extra/features/cloudflare-wrangler": {}
+		"ghcr.io/prulloac/devcontainer-features/bun:1": {},
+		"ghcr.io/devcontainers-extra/features/cloudflare-wrangler:1": {}
 	},
 	"forwardPorts": [8787],
 	"portsAttributes": {
